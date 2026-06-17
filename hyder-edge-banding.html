@@ -1,0 +1,1524 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hyder Edge Banding & Cutting — گوجرانوالہ</title>
+<style>
+/* ===== CSS CUSTOM PROPERTIES ===== */
+:root {
+  --navy: #0d1b2a;
+  --navy-mid: #1b2d42;
+  --navy-light: #243b55;
+  --gold: #c9a84c;
+  --gold-light: #e8c97a;
+  --gold-dim: #a8873a;
+  --cream: #f5f0e8;
+  --warm-white: #faf8f4;
+  --text-primary: #1a1a2e;
+  --text-secondary: #4a4a6a;
+  --text-muted: #7a7a9a;
+  --card-bg: #ffffff;
+  --section-alt: #f0ece3;
+  --border: rgba(201,168,76,0.2);
+  --shadow: 0 8px 40px rgba(13,27,42,0.12);
+  --shadow-gold: 0 8px 30px rgba(201,168,76,0.25);
+  --transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+  --radius: 16px;
+  --radius-sm: 8px;
+}
+[data-theme="dark"] {
+  --cream: #0a1628;
+  --warm-white: #0d1b2a;
+  --text-primary: #f0ece3;
+  --text-secondary: #c5bfb0;
+  --text-muted: #8a8a9a;
+  --card-bg: #1b2d42;
+  --section-alt: #111f30;
+  --border: rgba(201,168,76,0.25);
+  --shadow: 0 8px 40px rgba(0,0,0,0.4);
+}
+
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; font-size:16px; }
+body {
+  font-family: 'Segoe UI', 'Tahoma', system-ui, sans-serif;
+  background: var(--cream);
+  color: var(--text-primary);
+  transition: background 0.4s, color 0.4s;
+  overflow-x: hidden;
+  direction: rtl;
+}
+a { text-decoration:none; color:inherit; }
+img { max-width:100%; display:block; }
+ul { list-style:none; }
+
+/* ===== PROGRESS BAR ===== */
+#progress-bar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light));
+  z-index: 9999;
+  transition: width 0.1s;
+}
+
+/* ===== NAVBAR ===== */
+#navbar {
+  position: fixed;
+  top: 3px; left: 0; right: 0;
+  z-index: 1000;
+  background: rgba(13,27,42,0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(201,168,76,0.15);
+  transition: var(--transition);
+  padding: 0 5%;
+}
+[data-theme="dark"] #navbar { background: rgba(10,15,25,0.95); }
+.nav-inner {
+  max-width: 1300px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 70px;
+  gap: 20px;
+}
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+.nav-logo-icon {
+  width: 44px; height: 44px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+}
+.nav-logo-text { line-height:1.1; }
+.nav-logo-text strong { color: var(--gold); font-size: 1rem; display:block; }
+.nav-logo-text span { color: #aaa; font-size: 0.72rem; }
+.nav-links {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.nav-links a {
+  color: #ccc;
+  font-size: 0.87rem;
+  padding: 6px 14px;
+  border-radius: 20px;
+  transition: var(--transition);
+  white-space: nowrap;
+}
+.nav-links a:hover { color: var(--gold); background: rgba(201,168,76,0.1); }
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.btn-call-nav {
+  background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+  color: var(--navy);
+  font-weight: 700;
+  font-size: 0.82rem;
+  padding: 8px 16px;
+  border-radius: 20px;
+  transition: var(--transition);
+  white-space: nowrap;
+}
+.btn-call-nav:hover { transform: scale(1.05); box-shadow: var(--shadow-gold); }
+.theme-toggle {
+  width: 44px; height: 24px;
+  background: var(--navy-light);
+  border: 1px solid var(--gold);
+  border-radius: 12px;
+  cursor: pointer;
+  position: relative;
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+.theme-toggle::after {
+  content: '☀️';
+  position: absolute;
+  right: 2px; top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  transition: var(--transition);
+}
+[data-theme="dark"] .theme-toggle::after { content: '🌙'; right: auto; left: 2px; }
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 4px;
+}
+.hamburger span {
+  display: block;
+  width: 24px; height: 2px;
+  background: var(--gold);
+  border-radius: 2px;
+  transition: var(--transition);
+}
+.hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
+.hamburger.active span:nth-child(2) { opacity: 0; }
+.hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px,-5px); }
+#mobile-menu {
+  display: none;
+  position: fixed;
+  top: 73px; left: 0; right: 0;
+  background: rgba(13,27,42,0.98);
+  backdrop-filter: blur(20px);
+  z-index: 999;
+  padding: 20px;
+  border-bottom: 1px solid var(--border);
+  transform: translateY(-10px);
+  opacity: 0;
+  transition: var(--transition);
+}
+#mobile-menu.open { display: block; transform: translateY(0); opacity: 1; }
+#mobile-menu a {
+  display: block;
+  color: #ccc;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  border-bottom: 1px solid rgba(201,168,76,0.1);
+  transition: var(--transition);
+}
+#mobile-menu a:hover { color: var(--gold); background: rgba(201,168,76,0.08); }
+
+/* ===== HERO ===== */
+#hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(160deg, #0d1b2a 0%, #1b2d42 50%, #0d1b2a 100%);
+  padding: 120px 5% 80px;
+}
+.hero-bg-pattern {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(201,168,76,0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(201,168,76,0.06) 0%, transparent 50%),
+    repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(201,168,76,0.02) 40px, rgba(201,168,76,0.02) 41px);
+  animation: patternMove 20s linear infinite;
+}
+@keyframes patternMove { from{background-position:0 0,0 0,0 0;} to{background-position:100px 100px,0 0,80px 80px;} }
+.hero-wood-lines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0px,
+    transparent 60px,
+    rgba(201,168,76,0.03) 60px,
+    rgba(201,168,76,0.03) 61px
+  );
+}
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 900px;
+}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(201,168,76,0.15);
+  border: 1px solid rgba(201,168,76,0.3);
+  color: var(--gold-light);
+  font-size: 0.82rem;
+  padding: 6px 18px;
+  border-radius: 20px;
+  margin-bottom: 24px;
+  animation: fadeInDown 0.8s ease both;
+}
+.hero-badge::before { content:'⭐'; font-size: 14px; }
+.hero-title {
+  font-size: clamp(2.2rem, 6vw, 4.5rem);
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.15;
+  margin-bottom: 10px;
+  animation: fadeInDown 0.9s 0.1s ease both;
+}
+.hero-title .gold { color: var(--gold-light); }
+.hero-subtitle-en {
+  font-size: clamp(1rem, 2.5vw, 1.4rem);
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 14px;
+  font-style: italic;
+  animation: fadeInDown 1s 0.2s ease both;
+}
+.hero-tagline {
+  font-size: clamp(0.9rem, 2vw, 1.15rem);
+  color: var(--gold-light);
+  margin-bottom: 36px;
+  font-weight: 500;
+  animation: fadeInDown 1s 0.3s ease both;
+}
+.hero-tagline::before, .hero-tagline::after { content: ' ✦ '; color: var(--gold-dim); }
+.hero-btns {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+  animation: fadeInUp 1s 0.4s ease both;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+  color: var(--navy);
+  font-weight: 800;
+  font-size: 1rem;
+  padding: 14px 32px;
+  border-radius: 30px;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  cursor: pointer;
+}
+.btn-primary:hover { transform: translateY(-3px) scale(1.04); box-shadow: var(--shadow-gold); }
+.btn-secondary {
+  background: transparent;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 14px 32px;
+  border-radius: 30px;
+  border: 2px solid rgba(255,255,255,0.3);
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+.btn-secondary:hover { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,0.08); transform: translateY(-3px); }
+.hero-scroll {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: rgba(255,255,255,0.4);
+  font-size: 0.75rem;
+  animation: fadeInUp 1s 1s ease both;
+}
+.scroll-dot {
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--gold);
+  animation: scrollDot 1.5s infinite;
+}
+.scroll-dot:nth-child(2) { animation-delay: 0.2s; }
+.scroll-dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes scrollDot { 0%,100%{opacity:0.2;} 50%{opacity:1;} }
+
+/* ===== SECTIONS COMMON ===== */
+section { padding: 90px 5%; }
+.container { max-width: 1200px; margin: 0 auto; }
+.section-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(201,168,76,0.12);
+  border: 1px solid var(--border);
+  color: var(--gold);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 5px 16px;
+  border-radius: 20px;
+  margin-bottom: 14px;
+  letter-spacing: 0.5px;
+}
+.section-title {
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.2;
+  margin-bottom: 14px;
+}
+.section-title .gold { color: var(--gold); }
+.section-desc {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  line-height: 1.7;
+  max-width: 600px;
+}
+.section-header { margin-bottom: 56px; }
+.divider {
+  width: 60px; height: 3px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+  margin: 16px 0;
+  border-radius: 2px;
+}
+
+/* ===== ABOUT ===== */
+#about { background: var(--section-alt); }
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+.about-img-wrap {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+}
+.about-img-wrap img {
+  width: 100%;
+  height: 420px;
+  object-fit: cover;
+  border-radius: 20px;
+  filter: brightness(0.9) saturate(1.1);
+}
+.about-img-badge {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background: var(--gold);
+  color: var(--navy);
+  padding: 12px 20px;
+  border-radius: var(--radius-sm);
+  font-weight: 800;
+  font-size: 0.9rem;
+  line-height: 1.3;
+  text-align: center;
+  box-shadow: var(--shadow-gold);
+}
+.about-text p {
+  color: var(--text-secondary);
+  line-height: 1.8;
+  margin-bottom: 20px;
+  font-size: 0.97rem;
+}
+.trust-badges {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 16px;
+  margin-top: 32px;
+}
+.trust-badge {
+  text-align: center;
+  padding: 20px 12px;
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+}
+.trust-badge:hover { transform: translateY(-4px); border-color: var(--gold); }
+.trust-num {
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--gold);
+  display: block;
+  line-height: 1;
+}
+.trust-label { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
+
+/* ===== SERVICES ===== */
+#services { background: var(--warm-white); }
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
+}
+.service-card {
+  background: var(--card-bg);
+  border-radius: 20px;
+  padding: 32px 24px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+.service-card::before {
+  content:'';
+  position:absolute;
+  top:0; left:0; right:0;
+  height:3px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light));
+  transform: scaleX(0);
+  transition: var(--transition);
+  transform-origin: right;
+}
+.service-card:hover { transform: translateY(-8px); box-shadow: 0 20px 60px rgba(13,27,42,0.15); border-color: var(--gold); }
+.service-card:hover::before { transform: scaleX(1); transform-origin: left; }
+.service-icon {
+  width: 70px; height: 70px;
+  margin: 0 auto 20px;
+  background: linear-gradient(135deg, rgba(201,168,76,0.15), rgba(201,168,76,0.05));
+  border-radius: 18px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px;
+  border: 1px solid rgba(201,168,76,0.2);
+  transition: var(--transition);
+}
+.service-card:hover .service-icon { background: linear-gradient(135deg, var(--gold), var(--gold-dim)); }
+.service-card h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: var(--text-primary);
+}
+.service-card p {
+  font-size: 0.87rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ===== WHY CHOOSE US ===== */
+#why { background: var(--section-alt); }
+.why-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 28px;
+}
+.why-card {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  padding: 28px;
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  transition: var(--transition);
+}
+.why-card:hover { transform: translateX(-6px); border-color: var(--gold); box-shadow: var(--shadow); }
+.why-icon {
+  width: 52px; height: 52px;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+}
+.why-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
+.why-card p { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; }
+
+/* ===== GALLERY ===== */
+#gallery { background: var(--warm-white); }
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.gallery-item {
+  position: relative;
+  border-radius: var(--radius);
+  overflow: hidden;
+  cursor: pointer;
+  aspect-ratio: 4/3;
+  background: var(--navy-mid);
+}
+.gallery-item img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+.gallery-item:hover img { transform: scale(1.08); }
+.gallery-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(13,27,42,0.8), transparent);
+  display: flex;
+  align-items: flex-end;
+  padding: 16px;
+  opacity: 0;
+  transition: var(--transition);
+}
+.gallery-item:hover .gallery-overlay { opacity: 1; }
+.gallery-overlay span { color: #fff; font-size: 0.85rem; font-weight: 600; }
+/* Lightbox */
+#lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.92);
+  z-index: 9000;
+  align-items: center;
+  justify-content: center;
+}
+#lightbox.open { display: flex; }
+#lightbox img {
+  max-width: 90vw;
+  max-height: 85vh;
+  border-radius: var(--radius);
+  box-shadow: 0 0 60px rgba(201,168,76,0.3);
+}
+#lightbox-close {
+  position: absolute;
+  top: 20px; right: 20px;
+  color: #fff;
+  font-size: 2rem;
+  cursor: pointer;
+  background: rgba(255,255,255,0.1);
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  transition: var(--transition);
+}
+#lightbox-close:hover { background: var(--gold); color: var(--navy); }
+
+/* ===== TESTIMONIALS ===== */
+#testimonials { background: var(--navy); }
+#testimonials .section-title { color: #fff; }
+#testimonials .section-desc { color: rgba(255,255,255,0.6); }
+#testimonials .section-tag { background: rgba(201,168,76,0.2); border-color: rgba(201,168,76,0.3); }
+.testimonials-wrap { position: relative; overflow: hidden; }
+.testimonials-track {
+  display: flex;
+  gap: 24px;
+  transition: transform 0.5s cubic-bezier(0.4,0,0.2,1);
+}
+.testimonial-card {
+  background: var(--navy-mid);
+  border-radius: 20px;
+  padding: 32px;
+  border: 1px solid rgba(201,168,76,0.15);
+  min-width: calc(33.33% - 16px);
+  flex-shrink: 0;
+}
+.test-stars { color: var(--gold); font-size: 1.2rem; margin-bottom: 14px; }
+.test-text { color: rgba(255,255,255,0.8); line-height: 1.7; font-size: 0.95rem; margin-bottom: 20px; font-style: italic; }
+.test-author { display: flex; align-items: center; gap: 12px; }
+.test-avatar {
+  width: 46px; height: 46px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--navy);
+}
+.test-name { font-weight: 700; color: #fff; font-size: 0.9rem; }
+.test-loc { color: var(--text-muted); font-size: 0.78rem; }
+.carousel-controls {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 32px;
+}
+.carousel-btn {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(201,168,76,0.3);
+  background: rgba(201,168,76,0.1);
+  color: var(--gold);
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex; align-items: center; justify-content: center;
+}
+.carousel-btn:hover { background: var(--gold); color: var(--navy); }
+.carousel-dots { display: flex; gap: 8px; align-items: center; }
+.carousel-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: rgba(201,168,76,0.3);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.carousel-dot.active { background: var(--gold); width: 22px; border-radius: 4px; }
+
+/* ===== PRICING ===== */
+#pricing { background: var(--warm-white); }
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 28px;
+  align-items: start;
+}
+.pricing-card {
+  background: var(--card-bg);
+  border-radius: 24px;
+  padding: 36px 28px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+.pricing-card.featured {
+  background: linear-gradient(160deg, var(--navy), var(--navy-mid));
+  border-color: var(--gold);
+  transform: scale(1.04);
+}
+.pricing-card:hover { transform: translateY(-8px); box-shadow: 0 24px 60px rgba(13,27,42,0.18); }
+.pricing-card.featured:hover { transform: scale(1.04) translateY(-8px); }
+.featured-badge {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light));
+  color: var(--navy);
+  text-align: center;
+  font-weight: 800;
+  font-size: 0.78rem;
+  padding: 6px;
+  letter-spacing: 1px;
+}
+.pricing-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+.pricing-card.featured .pricing-name { color: #fff; margin-top: 20px; }
+.pricing-price {
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: var(--gold);
+  line-height: 1;
+  margin: 12px 0;
+}
+.pricing-price span { font-size: 0.9rem; color: var(--text-muted); font-weight: 500; }
+.pricing-features { margin: 20px 0; }
+.pricing-features li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.87rem;
+  color: var(--text-secondary);
+}
+.pricing-card.featured .pricing-features li { color: rgba(255,255,255,0.75); border-color: rgba(255,255,255,0.1); }
+.pricing-features li::before { content: '✓'; color: var(--gold); font-weight: 900; flex-shrink: 0; }
+.pricing-card .btn-primary { width: 100%; justify-content: center; margin-top: 8px; }
+.pricing-card.featured .btn-primary { background: linear-gradient(135deg, var(--gold-light), var(--gold)); }
+
+/* ===== CONTACT ===== */
+#contact { background: var(--section-alt); }
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+  align-items: start;
+}
+.contact-info { }
+.contact-info-item {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 20px;
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  margin-bottom: 16px;
+  transition: var(--transition);
+}
+.contact-info-item:hover { border-color: var(--gold); transform: translateX(-4px); }
+.contact-info-icon {
+  width: 48px; height: 48px;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+}
+.contact-info-item h4 { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 4px; }
+.contact-info-item p { font-size: 0.95rem; color: var(--text-primary); font-weight: 600; }
+.contact-info-item a { color: var(--gold); }
+.map-placeholder {
+  background: var(--navy-mid);
+  border-radius: var(--radius);
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  color: var(--gold);
+  margin-top: 16px;
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.map-placeholder:hover { border-color: var(--gold); }
+.map-placeholder::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(0deg, rgba(201,168,76,0.04) 0px, rgba(201,168,76,0.04) 1px, transparent 1px, transparent 30px),
+              repeating-linear-gradient(90deg, rgba(201,168,76,0.04) 0px, rgba(201,168,76,0.04) 1px, transparent 1px, transparent 30px);
+}
+.map-placeholder span { position: relative; }
+/* Contact Form */
+.contact-form { background: var(--card-bg); border-radius: 20px; padding: 36px; border: 1px solid var(--border); box-shadow: var(--shadow); }
+.contact-form h3 { font-size: 1.3rem; font-weight: 700; margin-bottom: 24px; color: var(--text-primary); }
+.form-group { margin-bottom: 18px; }
+.form-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  font-family: inherit;
+  transition: var(--transition);
+  outline: none;
+  direction: rtl;
+}
+.form-group textarea { height: 110px; resize: vertical; }
+.form-group input:focus,
+.form-group textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,168,76,0.15); }
+.form-submit {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+  color: var(--navy);
+  font-weight: 800;
+  font-size: 1rem;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: inherit;
+}
+.form-submit:hover { transform: translateY(-2px); box-shadow: var(--shadow-gold); }
+.form-success {
+  display: none;
+  background: rgba(201,168,76,0.15);
+  border: 1px solid var(--gold);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  color: var(--gold);
+  text-align: center;
+  font-weight: 600;
+  margin-top: 12px;
+}
+
+/* ===== FOOTER ===== */
+footer {
+  background: var(--navy);
+  padding: 60px 5% 24px;
+  color: rgba(255,255,255,0.7);
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 50px;
+  margin-bottom: 50px;
+}
+.footer-brand .nav-logo-icon { margin-bottom: 16px; }
+.footer-brand p {
+  font-size: 0.88rem;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.55);
+  margin-bottom: 20px;
+  max-width: 280px;
+}
+.social-links { display: flex; gap: 10px; flex-wrap: wrap; }
+.social-link {
+  width: 38px; height: 38px;
+  border-radius: 10px;
+  border: 1px solid rgba(201,168,76,0.25);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  transition: var(--transition);
+  cursor: pointer;
+}
+.social-link:hover { background: var(--gold); border-color: var(--gold); }
+.footer-col h4 { color: var(--gold); font-size: 0.95rem; font-weight: 700; margin-bottom: 18px; }
+.footer-col ul { display: flex; flex-direction: column; gap: 10px; }
+.footer-col ul li a { color: rgba(255,255,255,0.55); font-size: 0.85rem; transition: var(--transition); }
+.footer-col ul li a:hover { color: var(--gold); }
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding-top: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.4);
+}
+.footer-bottom span { color: var(--gold); }
+
+/* ===== WHATSAPP FLOAT ===== */
+#whatsapp-float {
+  position: fixed;
+  bottom: 28px;
+  left: 28px;
+  z-index: 5000;
+  width: 58px; height: 58px;
+  background: #25D366;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px;
+  box-shadow: 0 4px 20px rgba(37,211,102,0.4);
+  animation: waPulse 2s infinite;
+  transition: var(--transition);
+}
+#whatsapp-float:hover { transform: scale(1.15); box-shadow: 0 8px 30px rgba(37,211,102,0.5); animation: none; }
+@keyframes waPulse {
+  0%,100% { box-shadow: 0 4px 20px rgba(37,211,102,0.4), 0 0 0 0 rgba(37,211,102,0.3); }
+  50% { box-shadow: 0 4px 20px rgba(37,211,102,0.4), 0 0 0 14px rgba(37,211,102,0); }
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeInDown {
+  from { opacity:0; transform:translateY(-24px); }
+  to { opacity:1; transform:translateY(0); }
+}
+@keyframes fadeInUp {
+  from { opacity:0; transform:translateY(24px); }
+  to { opacity:1; transform:translateY(0); }
+}
+.reveal {
+  opacity: 0;
+  transform: translateY(36px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.left { transform: translateX(-36px); }
+.reveal.right { transform: translateX(36px); }
+.reveal.visible { opacity:1; transform:none; }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  .about-grid, .contact-grid { grid-template-columns: 1fr; }
+  .about-img-wrap { display: none; }
+  .gallery-grid { grid-template-columns: repeat(2,1fr); }
+  .testimonial-card { min-width: calc(100% - 0px); }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 640px) {
+  .nav-links { display: none; }
+  .btn-call-nav { display: none; }
+  .hamburger { display: flex; }
+  .gallery-grid { grid-template-columns: 1fr 1fr; }
+  .trust-badges { grid-template-columns: repeat(3,1fr); }
+  .footer-grid { grid-template-columns: 1fr; gap: 30px; }
+  .pricing-card.featured { transform: scale(1); }
+  section { padding: 70px 5%; }
+}
+</style>
+</head>
+<body data-theme="light">
+
+<!-- Progress Bar -->
+<div id="progress-bar"></div>
+
+<!-- Navbar -->
+<nav id="navbar">
+  <div class="nav-inner">
+    <div class="nav-logo">
+      <div class="nav-logo-icon">🪵</div>
+      <div class="nav-logo-text">
+        <strong>Hyder Edge Banding</strong>
+        <span>& Cutting — گوجرانوالہ</span>
+      </div>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#about">ہمارے بارے میں</a></li>
+      <li><a href="#services">سروسز</a></li>
+      <li><a href="#gallery">گیلری</a></li>
+      <li><a href="#pricing">قیمتیں</a></li>
+      <li><a href="#contact">رابطہ</a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="theme-toggle" id="themeToggle" title="Toggle dark/light mode"></button>
+      <a href="tel:03077575878" class="btn-call-nav">📞 ابھی کال کریں</a>
+      <div class="hamburger" id="hamburger">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div id="mobile-menu">
+  <a href="#about" onclick="closeMenu()">ہمارے بارے میں</a>
+  <a href="#services" onclick="closeMenu()">سروسز</a>
+  <a href="#gallery" onclick="closeMenu()">گیلری</a>
+  <a href="#pricing" onclick="closeMenu()">قیمتیں</a>
+  <a href="#contact" onclick="closeMenu()">رابطہ کریں</a>
+  <a href="tel:03077575878" onclick="closeMenu()" style="color:var(--gold);font-weight:700;margin-top:8px;">📞 03077575878</a>
+</div>
+
+<!-- Hero -->
+<section id="hero">
+  <div class="hero-bg-pattern"></div>
+  <div class="hero-wood-lines"></div>
+  <div class="hero-content">
+    <div class="hero-badge">گوجرانوالہ کی معروف فرنیچر سروس</div>
+    <h1 class="hero-title">
+      <span class="gold">Hyder</span> Edge Banding<br>&amp; Cutting
+    </h1>
+    <p class="hero-subtitle-en">Professional Furniture Cutting & Edge Banding Services</p>
+    <p class="hero-tagline">ہم معیار پر کوئی سمجھوتہ نہیں کرتے</p>
+    <div class="hero-btns">
+      <a href="tel:03077575878" class="btn-primary">📞 ابھی کال کریں</a>
+      <a href="https://wa.me/923077575878" target="_blank" class="btn-secondary">💬 واٹس ایپ کریں</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    مزید دیکھیں
+    <div class="scroll-dot"></div>
+    <div class="scroll-dot"></div>
+    <div class="scroll-dot"></div>
+  </div>
+</section>
+
+<!-- About -->
+<section id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-img-wrap reveal left">
+        <img src="https://picsum.photos/seed/workshop1/600/420" alt="ورک شاپ">
+        <div class="about-img-badge">✅ اعلیٰ معیار<br>100% ضمانت</div>
+      </div>
+      <div class="about-text">
+        <div class="section-tag">🏭 ہمارے بارے میں</div>
+        <h2 class="section-title">فرنیچر انڈسٹری میں <span class="gold">قابلِ اعتماد</span> نام</h2>
+        <div class="divider"></div>
+        <p>Hyder Edge Banding & Cutting گوجرانوالہ میں فرنیچر میٹریل کی پروفیشنل کٹنگ اور ایج بینڈنگ کے لیے ایک معروف نام ہے۔ ہم جدید مشینری اور درآمد شدہ مواد استعمال کرتے ہیں۔</p>
+        <p>UV شیٹ، MDF اور چپ بورڈ کی انتہائی نفیس اور ایکوریٹ کٹنگ سے لے کر ہائی کوالٹی PVC ایج بینڈنگ تک — ہر کام ہم مکمل درستگی اور دیانتداری کے ساتھ کرتے ہیں۔</p>
+        <div class="trust-badges">
+          <div class="trust-badge reveal reveal-delay-1">
+            <span class="trust-num counter" data-target="8">0</span>
+            <div class="trust-label">سال کا تجربہ</div>
+          </div>
+          <div class="trust-badge reveal reveal-delay-2">
+            <span class="trust-num counter" data-target="500">0</span>
+            <div class="trust-label">خوش گاہک</div>
+          </div>
+          <div class="trust-badge reveal reveal-delay-3">
+            <span class="trust-num counter" data-target="1200">0</span>
+            <div class="trust-label">مکمل پراجیکٹس</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Services -->
+<section id="services">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">⚙️ ہماری سروسز</div>
+      <h2 class="section-title">جدید مشینری کے ساتھ <span class="gold">اعلیٰ سروسز</span></h2>
+      <div class="divider"></div>
+      <p class="section-desc">ہر قسم کے فرنیچر میٹریل کے لیے پروفیشنل کٹنگ اور ایج بینڈنگ۔</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card reveal reveal-delay-1">
+        <div class="service-icon">🪚</div>
+        <h3>UV شیٹ کٹنگ</h3>
+        <p>UV شیٹ کی انتہائی نفیس اور ایکوریٹ کٹنگ — بالکل درست پیمائش کے ساتھ۔</p>
+      </div>
+      <div class="service-card reveal reveal-delay-2">
+        <div class="service-icon">📋</div>
+        <h3>MDF کٹنگ</h3>
+        <p>MDF بورڈ کی صاف اور درست کٹنگ ہر سائز اور شکل میں۔</p>
+      </div>
+      <div class="service-card reveal reveal-delay-3">
+        <div class="service-icon">🗂️</div>
+        <h3>چپ بورڈ کٹنگ</h3>
+        <p>چپ بورڈ کی مضبوط اور صاف کٹنگ بغیر کسی نقص کے۔</p>
+      </div>
+      <div class="service-card reveal reveal-delay-4">
+        <div class="service-icon">🔲</div>
+        <h3>PVC ایج بینڈنگ</h3>
+        <p>درآمد شدہ PVC ٹیپ کے ساتھ ہائی کوالٹی ایج بینڈنگ جو وقت کے ساتھ نہیں اکھڑتی۔</p>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon">🏠</div>
+        <h3>کچن / وارڈروب / کابنٹس</h3>
+        <p>کچن، وارڈروب اور کابنٹس کے لیے مکمل فرنیچر سولیوشن ایک چھت تلے۔</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Why Choose Us -->
+<section id="why">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">💯 ہمیں کیوں چنیں</div>
+      <h2 class="section-title">ہم کیوں ہیں <span class="gold">سب سے بہترین</span></h2>
+      <div class="divider"></div>
+    </div>
+    <div class="why-grid">
+      <div class="why-card reveal reveal-delay-1">
+        <div class="why-icon">🎯</div>
+        <div>
+          <h3>بالکل درست کٹنگ</h3>
+          <p>ہماری جدید CNC مشینری ہر کٹ میں 100% درستگی یقینی بناتی ہے۔</p>
+        </div>
+      </div>
+      <div class="why-card reveal reveal-delay-2">
+        <div class="why-icon">💪</div>
+        <div>
+          <h3>مضبوط اور دیرپا گلو</h3>
+          <p>ہم ایسا گلو استعمال کرتے ہیں جو برسوں تک نہیں اکھڑتا — مضبوط بانڈنگ۔</p>
+        </div>
+      </div>
+      <div class="why-card reveal reveal-delay-3">
+        <div class="why-icon">🌍</div>
+        <div>
+          <h3>درآمد شدہ مواد</h3>
+          <p>صرف بہترین درآمد شدہ PVC ٹیپ اور مواد استعمال کیا جاتا ہے۔</p>
+        </div>
+      </div>
+      <div class="why-card reveal reveal-delay-4">
+        <div class="why-icon">⚡</div>
+        <div>
+          <h3>تیز ڈیلیوری</h3>
+          <p>وقت پر ڈیلیوری ہمارا وعدہ ہے — آپ کا وقت ہمارے لیے قیمتی ہے۔</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Gallery -->
+<section id="gallery">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">📸 ہماری گیلری</div>
+      <h2 class="section-title">ہمارے <span class="gold">کام کے نمونے</span></h2>
+      <div class="divider"></div>
+    </div>
+    <div class="gallery-grid">
+      <div class="gallery-item reveal reveal-delay-1" onclick="openLightbox('https://picsum.photos/seed/wood1/800/600')">
+        <img src="https://picsum.photos/seed/wood1/400/300" alt="کٹنگ کام">
+        <div class="gallery-overlay"><span>UV شیٹ کٹنگ</span></div>
+      </div>
+      <div class="gallery-item reveal reveal-delay-2" onclick="openLightbox('https://picsum.photos/seed/furniture2/800/600')">
+        <img src="https://picsum.photos/seed/furniture2/400/300" alt="ایج بینڈنگ">
+        <div class="gallery-overlay"><span>PVC ایج بینڈنگ</span></div>
+      </div>
+      <div class="gallery-item reveal reveal-delay-3" onclick="openLightbox('https://picsum.photos/seed/interior3/800/600')">
+        <img src="https://picsum.photos/seed/interior3/400/300" alt="کچن">
+        <div class="gallery-overlay"><span>کچن کابنٹس</span></div>
+      </div>
+      <div class="gallery-item reveal reveal-delay-1" onclick="openLightbox('https://picsum.photos/seed/workshop4/800/600')">
+        <img src="https://picsum.photos/seed/workshop4/400/300" alt="MDF">
+        <div class="gallery-overlay"><span>MDF کٹنگ</span></div>
+      </div>
+      <div class="gallery-item reveal reveal-delay-2" onclick="openLightbox('https://picsum.photos/seed/wood5/800/600')">
+        <img src="https://picsum.photos/seed/wood5/400/300" alt="وارڈروب">
+        <div class="gallery-overlay"><span>وارڈروب پراجیکٹ</span></div>
+      </div>
+      <div class="gallery-item reveal reveal-delay-3" onclick="openLightbox('https://picsum.photos/seed/cabinet6/800/600')">
+        <img src="https://picsum.photos/seed/cabinet6/400/300" alt="چپ بورڈ">
+        <div class="gallery-overlay"><span>چپ بورڈ پراجیکٹ</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Lightbox -->
+<div id="lightbox">
+  <div id="lightbox-close" onclick="closeLightbox()">✕</div>
+  <img id="lightbox-img" src="" alt="Gallery">
+</div>
+
+<!-- Testimonials -->
+<section id="testimonials">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">⭐ گاہکوں کی رائے</div>
+      <h2 class="section-title">ہمارے <span class="gold">خوش گاہک</span> کیا کہتے ہیں</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="testimonials-wrap">
+      <div class="testimonials-track" id="testTrack">
+        <div class="testimonial-card">
+          <div class="test-stars">★★★★★</div>
+          <p class="test-text">"Hyder Edge Banding کا کام واقعی شاندار ہے۔ میرے کچن کی کابنٹس کی ایج بینڈنگ بالکل پرفیکٹ ہوئی اور گلو اتنا مضبوط ہے کہ ایک سال بعد بھی ویسا ہی ہے۔ بہت شکریہ!"</p>
+          <div class="test-author">
+            <div class="test-avatar">ع</div>
+            <div>
+              <div class="test-name">عمر فاروق</div>
+              <div class="test-loc">📍 گوجرانوالہ</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="test-stars">★★★★★</div>
+          <p class="test-text">"بہترین سروس اور وقت پر ڈیلیوری۔ UV شیٹ کٹنگ بالکل سیدھی اور صاف تھی۔ قیمت بھی مناسب ہے — ضرور دوبارہ آؤں گا۔"</p>
+          <div class="test-author">
+            <div class="test-avatar">ا</div>
+            <div>
+              <div class="test-name">احمد رضا</div>
+              <div class="test-loc">📍 سیالکوٹ روڈ</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="test-stars">★★★★★</div>
+          <p class="test-text">"گوجرانوالہ میں اتنی بہترین ایج بینڈنگ سروس پہلے نہیں دیکھی تھی۔ میری پوری وارڈروب کا کام انہوں نے کیا اور نتیجہ لاجواب ہے۔ 100% تجویز کرتا ہوں!"</p>
+          <div class="test-author">
+            <div class="test-avatar">ز</div>
+            <div>
+              <div class="test-name">زاہد حسین</div>
+              <div class="test-loc">📍 راجکوٹ روڈ</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="carousel-controls">
+      <button class="carousel-btn" onclick="prevSlide()">›</button>
+      <div class="carousel-dots">
+        <div class="carousel-dot active" onclick="goSlide(0)"></div>
+        <div class="carousel-dot" onclick="goSlide(1)"></div>
+        <div class="carousel-dot" onclick="goSlide(2)"></div>
+      </div>
+      <button class="carousel-btn" onclick="nextSlide()">‹</button>
+    </div>
+  </div>
+</section>
+
+<!-- Pricing -->
+<section id="pricing">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">💰 قیمتیں</div>
+      <h2 class="section-title">مناسب قیمتیں <span class="gold">بہترین معیار</span> کے ساتھ</h2>
+      <div class="divider"></div>
+      <p class="section-desc">ہر بجٹ کے لیے پیکج — معیار ہر جگہ یکساں رہتا ہے۔</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="pricing-card reveal reveal-delay-1">
+        <div class="pricing-name">بیسک پیکج</div>
+        <div class="pricing-price">رابطہ کریں<span></span></div>
+        <ul class="pricing-features">
+          <li>چپ بورڈ کٹنگ</li>
+          <li>سادہ ایج بینڈنگ</li>
+          <li>ایک رنگ کی ٹیپ</li>
+          <li>7 دن ڈیلیوری</li>
+        </ul>
+        <a href="tel:03077575878" class="btn-primary">قیمت جانیں</a>
+      </div>
+      <div class="pricing-card featured reveal reveal-delay-2">
+        <div class="featured-badge">⭐ سب سے مقبول</div>
+        <div class="pricing-name">پریمیم پیکج</div>
+        <div class="pricing-price">رابطہ کریں<span></span></div>
+        <ul class="pricing-features">
+          <li>UV/MDF کٹنگ</li>
+          <li>ہائی کوالٹی PVC ایج بینڈنگ</li>
+          <li>درآمد شدہ ٹیپ</li>
+          <li>مضبوط گلو</li>
+          <li>3 دن ڈیلیوری</li>
+        </ul>
+        <a href="tel:03077575878" class="btn-primary">قیمت جانیں</a>
+      </div>
+      <div class="pricing-card reveal reveal-delay-3">
+        <div class="pricing-name">کمپلیٹ سولیوشن</div>
+        <div class="pricing-price">رابطہ کریں<span></span></div>
+        <ul class="pricing-features">
+          <li>کچن / وارڈروب / کابنٹ</li>
+          <li>تمام میٹریل شامل</li>
+          <li>پریمیم ایج بینڈنگ</li>
+          <li>ہوم ڈیلیوری</li>
+          <li>6 ماہ وارنٹی</li>
+        </ul>
+        <a href="tel:03077575878" class="btn-primary">قیمت جانیں</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section id="contact">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">📞 رابطہ کریں</div>
+      <h2 class="section-title">آج ہی <span class="gold">رابطہ کریں</span></h2>
+      <div class="divider"></div>
+    </div>
+    <div class="contact-grid">
+      <div>
+        <div class="contact-info-item reveal reveal-delay-1">
+          <div class="contact-info-icon">📍</div>
+          <div>
+            <h4>پتہ</h4>
+            <p>الودود مارکیٹ، نزد الخدمت واٹر پلانٹ، راجکوٹ گوندلاولا روڈ، گوجرانوالہ</p>
+          </div>
+        </div>
+        <div class="contact-info-item reveal reveal-delay-2">
+          <div class="contact-info-icon">📞</div>
+          <div>
+            <h4>فون نمبر</h4>
+            <p><a href="tel:03077575878">0307-7575878</a></p>
+          </div>
+        </div>
+        <div class="contact-info-item reveal reveal-delay-3">
+          <div class="contact-info-icon">💬</div>
+          <div>
+            <h4>واٹس ایپ</h4>
+            <p><a href="https://wa.me/923077575878" target="_blank">واٹس ایپ پر رابطہ کریں</a></p>
+          </div>
+        </div>
+        <div class="contact-info-item reveal reveal-delay-4">
+          <div class="contact-info-icon">🕐</div>
+          <div>
+            <h4>اوقات کار</h4>
+            <p>پیر تا ہفتہ: صبح 9 بجے — شام 7 بجے</p>
+          </div>
+        </div>
+        <div class="map-placeholder reveal" onclick="window.open('https://maps.google.com?q=Rajkot+Gondlanwala+Road+Gujranwala','_blank')">
+          <span>🗺️ نقشہ دیکھیں</span>
+        </div>
+      </div>
+      <div class="contact-form reveal right">
+        <h3>پیغام بھیجیں</h3>
+        <div class="form-group">
+          <label>آپ کا نام</label>
+          <input type="text" id="fname" placeholder="مثلاً: محمد علی">
+        </div>
+        <div class="form-group">
+          <label>فون نمبر</label>
+          <input type="tel" id="fphone" placeholder="03xxxxxxxxx" dir="ltr" style="text-align:left;">
+        </div>
+        <div class="form-group">
+          <label>پیغام</label>
+          <textarea id="fmsg" placeholder="آپ کی ضرورت بیان کریں..."></textarea>
+        </div>
+        <button class="form-submit" onclick="submitForm()">📤 پیغام بھیجیں</button>
+        <div class="form-success" id="formSuccess">✅ آپ کا پیغام موصول ہو گیا! ہم جلد رابطہ کریں گے۔</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo" style="margin-bottom:16px;">
+          <div class="nav-logo-icon">🪵</div>
+          <div class="nav-logo-text">
+            <strong style="color:var(--gold);">Hyder Edge Banding</strong>
+            <span style="color:#888;">& Cutting — گوجرانوالہ</span>
+          </div>
+        </div>
+        <p>فرنیچر انڈسٹری کے لیے بہترین ایج بینڈنگ اور کٹنگ سروس۔ ہم معیار پر کوئی سمجھوتہ نہیں کرتے۔</p>
+        <div class="social-links">
+          <a href="https://wa.me/923077575878" class="social-link" title="WhatsApp" target="_blank">💬</a>
+          <a href="tel:03077575878" class="social-link" title="Call">📞</a>
+          <span class="social-link" title="Facebook">📘</span>
+          <span class="social-link" title="Instagram">📷</span>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>فوری لنکس</h4>
+        <ul>
+          <li><a href="#about">ہمارے بارے میں</a></li>
+          <li><a href="#services">سروسز</a></li>
+          <li><a href="#gallery">گیلری</a></li>
+          <li><a href="#pricing">قیمتیں</a></li>
+          <li><a href="#contact">رابطہ</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>سروسز</h4>
+        <ul>
+          <li><a href="#services">UV شیٹ کٹنگ</a></li>
+          <li><a href="#services">MDF کٹنگ</a></li>
+          <li><a href="#services">چپ بورڈ</a></li>
+          <li><a href="#services">PVC ایج بینڈنگ</a></li>
+          <li><a href="#services">کچن / وارڈروب</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 <span>Hyder Edge Banding & Cutting</span> — تمام حقوق محفوظ ہیں</span>
+      <span>گوجرانوالہ، پاکستان 🇵🇰</span>
+    </div>
+  </div>
+</footer>
+
+<!-- WhatsApp Float -->
+<a href="https://wa.me/923077575878" id="whatsapp-float" target="_blank" title="واٹس ایپ پر رابطہ کریں">💬</a>
+
+<script>
+// ===== THEME TOGGLE =====
+const themeToggle = document.getElementById('themeToggle');
+const body = document.body;
+const saved = localStorage.getItem('theme') || 'light';
+body.setAttribute('data-theme', saved);
+themeToggle.addEventListener('click', () => {
+  const current = body.getAttribute('data-theme');
+  const next = current === 'light' ? 'dark' : 'light';
+  body.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+});
+
+// ===== PROGRESS BAR =====
+const progressBar = document.getElementById('progress-bar');
+window.addEventListener('scroll', () => {
+  const scrolled = window.scrollY;
+  const total = document.documentElement.scrollHeight - window.innerHeight;
+  progressBar.style.width = (scrolled / total * 100) + '%';
+});
+
+// ===== HAMBURGER MENU =====
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobile-menu');
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('active');
+  mobileMenu.classList.toggle('open');
+});
+function closeMenu() {
+  hamburger.classList.remove('active');
+  mobileMenu.classList.remove('open');
+}
+
+// ===== REVEAL ON SCROLL =====
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+reveals.forEach(el => observer.observe(el));
+
+// ===== COUNTER ANIMATION =====
+const counters = document.querySelectorAll('.counter');
+const counterObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const target = +e.target.getAttribute('data-target');
+      let current = 0;
+      const step = target / 60;
+      const timer = setInterval(() => {
+        current += step;
+        if (current >= target) {
+          current = target;
+          clearInterval(timer);
+        }
+        e.target.textContent = Math.floor(current) + (target >= 100 ? '+' : '+');
+      }, 24);
+      counterObserver.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.5 });
+counters.forEach(c => counterObserver.observe(c));
+
+// ===== CAROUSEL =====
+let currentSlide = 0;
+const totalSlides = 3;
+const track = document.getElementById('testTrack');
+const dots = document.querySelectorAll('.carousel-dot');
+function updateCarousel() {
+  const isMobile = window.innerWidth <= 640;
+  const isTablet = window.innerWidth <= 900;
+  let visibleSlides = isMobile ? 1 : (isTablet ? 1 : 3);
+  const slideWidth = 100 / visibleSlides;
+  const maxSlide = totalSlides - visibleSlides;
+  if (currentSlide > maxSlide) currentSlide = 0;
+  if (currentSlide < 0) currentSlide = maxSlide;
+  track.style.transform = `translateX(${currentSlide * slideWidth}%)`;
+  dots.forEach((d, i) => d.classList.toggle('active', i === currentSlide));
+}
+function nextSlide() { currentSlide--; updateCarousel(); }
+function prevSlide() { currentSlide++; updateCarousel(); }
+function goSlide(n) { currentSlide = n; updateCarousel(); }
+window.addEventListener('resize', updateCarousel);
+setInterval(nextSlide, 5000);
+
+// ===== LIGHTBOX =====
+function openLightbox(src) {
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.getElementById('lightbox').addEventListener('click', function(e) {
+  if (e.target === this) closeLightbox();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+// ===== CONTACT FORM =====
+function submitForm() {
+  const name = document.getElementById('fname').value.trim();
+  const phone = document.getElementById('fphone').value.trim();
+  const msg = document.getElementById('fmsg').value.trim();
+  if (!name || !phone || !msg) {
+    alert('براہ کرم تمام خانے پُر کریں۔');
+    return;
+  }
+  const waMsg = encodeURIComponent(`السلام علیکم!\nنام: ${name}\nفون: ${phone}\nپیغام: ${msg}`);
+  window.open(`https://wa.me/923077575878?text=${waMsg}`, '_blank');
+  document.getElementById('formSuccess').style.display = 'block';
+  document.getElementById('fname').value = '';
+  document.getElementById('fphone').value = '';
+  document.getElementById('fmsg').value = '';
+  setTimeout(() => { document.getElementById('formSuccess').style.display = 'none'; }, 5000);
+}
+
+// ===== SMOOTH SCROLL LINKS =====
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+// ===== PARALLAX HERO =====
+window.addEventListener('scroll', () => {
+  const hero = document.querySelector('.hero-bg-pattern');
+  if (hero) hero.style.transform = `translateY(${window.scrollY * 0.3}px)`;
+});
+
+// ===== NAVBAR SCROLL SHADOW =====
+window.addEventListener('scroll', () => {
+  const navbar = document.getElementById('navbar');
+  if (window.scrollY > 50) {
+    navbar.style.boxShadow = '0 4px 30px rgba(0,0,0,0.3)';
+  } else {
+    navbar.style.boxShadow = 'none';
+  }
+});
+</script>
+</body>
+</html>
